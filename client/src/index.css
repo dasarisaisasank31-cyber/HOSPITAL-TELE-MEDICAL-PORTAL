@@ -1,0 +1,58 @@
+:root {
+  --bg-dark: #030712;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --cyan-primary: #22d3ee;
+  --blue-primary: #2563eb;
+  --text-main: #f3f4f6;
+  --text-dim: #9ca3af;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: 1px border rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, var(--cyan-primary), var(--blue-primary));
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+  transform: translateY(-2px);
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  color: white;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: var(--cyan-primary);
+}

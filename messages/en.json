@@ -1,0 +1,21 @@
+{
+  "common": {
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "welcome": "Welcome to MediConnect"
+  },
+  "landing": {
+    "hero_title": "Quality Healthcare From Your Home",
+    "hero_subtitle": "Connect with 500+ verified doctors instantly.",
+    "cta_find": "Find a Doctor",
+    "cta_join": "Join as a Doctor"
+  },
+  "roles": {
+    "patient": "Patient",
+    "doctor": "Doctor",
+    "admin": "Admin",
+    "pharmacist": "Pharmacist"
+  }
+}

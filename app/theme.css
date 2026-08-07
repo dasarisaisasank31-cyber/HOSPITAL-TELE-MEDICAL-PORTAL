@@ -1,0 +1,54 @@
+/* app/theme.css – design tokens for premium dark UI */
+
+/* Base dark palette */
+:root {
+  /* Primary neon palette */
+  --color-primary-neon: 0 100% 50%; /* hsl hue=0? we'll use cyan-neon */
+  --color-primary-neon: 190 100% 55%;
+  --color-primary-neon-foreground: 210 40% 98%;
+
+  /* Secondary neon */
+  --color-secondary-neon: 280 80% 65%;
+  --color-secondary-neon-foreground: 0 0% 100%;
+
+  /* Background */
+  --color-bg-space: 222 84% 5%; /* deep space black */
+  --color-bg-starfield: url('/starfield.png');
+}
+
+/* Dark mode overrides */
+.dark {
+  --background: var(--color-bg-space);
+  --foreground: 210 40% 98%;
+  --primary: var(--color-primary-neon);
+  --primary-foreground: var(--color-primary-neon-foreground);
+  --secondary: var(--color-secondary-neon);
+  --secondary-foreground: var(--color-secondary-neon-foreground);
+}
+
+/* Utility classes */
+.bg-space {
+  background-color: hsl(var(--background));
+  background-image: var(--color-bg-starfield);
+  background-size: cover;
+  background-position: center;
+}
+
+.neon-text {
+  color: hsl(var(--primary));
+  text-shadow: 0 0 4px hsl(var(--primary)), 0 0 8px hsl(var(--primary));
+}
+
+.neon-border {
+  border: 2px solid hsl(var(--primary));
+  box-shadow: 0 0 8px hsl(var(--primary));
+}
+
+/* Glow animation */
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 6px hsl(var(--primary)), 0 0 12px hsl(var(--primary)); }
+  50% { box-shadow: 0 0 12px hsl(var(--primary)), 0 0 24px hsl(var(--primary)); }
+}
+.neon-pulse {
+  animation: neon-pulse 2s infinite ease-in-out;
+}

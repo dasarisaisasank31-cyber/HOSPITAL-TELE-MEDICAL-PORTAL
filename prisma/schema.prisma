@@ -1,0 +1,182 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  phone         String?   @unique
+  passwordHash  String
+  role          String    @default("PATIENT")
+  isVerified    Boolean   @default(false)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  patientProfile PatientProfile?
+  doctorProfile  DoctorProfile?
+  appointments   Appointment[]
+  notifications  Notification[]
+  auditLogs      AuditLog[]
+}
+
+model PatientProfile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  fullName          String
+  dateOfBirth       DateTime
+  gender            String
+  bloodGroup        String?
+  allergies         String?
+  chronicConditions String?
+  emergencyContact  String?
+  abhaId            String?
+  avatar            String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DoctorProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  fullName        String
+  specialization  String
+  licenseNumber   String   @unique
+  experience      Int
+  qualifications  String
+  consultationFee Float
+  rating          Float    @default(0)
+  totalReviews    Int      @default(0)
+  isApproved      Boolean  @default(false)
+  bio             String?
+  avatar          String?
+  languages       String?
+  availableSlots  String?  // JSON stringified for SQLite
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviews Review[]
+}
+
+model Appointment {
+  id            String            @id @default(cuid())
+  patientId     String
+  doctorId      String
+  scheduledAt   DateTime
+  duration      Int               @default(30)
+  status        String            @default("PENDING")
+  symptoms      String?
+  meetingRoomId String?           @unique
+  paymentId     String?           @unique
+  notes         String?
+
+  patient User @relation(fields: [patientId], references: [id])
+  payment Payment?
+  review  Review?
+  consultation Consultation?
+}
+
+model Consultation {
+  id            String    @id @default(cuid())
+  appointmentId String    @unique
+  startedAt     DateTime  @default(now())
+  endedAt       DateTime?
+  doctorNotes   String?
+  diagnosis     String?
+  followUpDate  DateTime?
+  prescriptionId String?
+  labOrderIds   String?
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+}
+
+model Prescription {
+  id             String   @id @default(cuid())
+  consultationId String   @unique
+  patientId      String
+  doctorId       String
+  medications    String?  // JSON stringified for SQLite
+  instructions   String?
+  pdfUrl         String?
+  issuedAt       DateTime @default(now())
+  validUntil     DateTime?
+}
+
+model LabOrder {
+  id             String   @id @default(cuid())
+  consultationId String
+  patientId      String
+  doctorId       String
+  tests          String?
+  status         String   @default("PENDING")
+  resultUrl      String?
+  orderedAt      DateTime @default(now())
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  appointmentId     String        @unique
+  patientId         String
+  amount            Float
+  currency          String        @default("INR")
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  status            String        @default("PENDING")
+  paidAt            DateTime?
+  refundedAt        DateTime?
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+}
+
+model Review {
+  id            String   @id @default(cuid())
+  patientId     String
+  doctorId      String
+  appointmentId String   @unique
+  rating        Int
+  comment       String?
+  createdAt     DateTime @default(now())
+
+  doctor      DoctorProfile @relation(fields: [doctorId], references: [id])
+  appointment Appointment   @relation(fields: [appointmentId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  body      String
+  type      String
+  isRead    Boolean  @default(false)
+  data      String?  // JSON stringified for SQLite
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  entity    String
+  entityId  String?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChatMessage {
+  id         String          @id @default(cuid())
+  roomId     String
+  senderId   String
+  senderRole String
+  message    String
+  type       String          @default("TEXT")
+  createdAt  DateTime        @default(now())
+}
