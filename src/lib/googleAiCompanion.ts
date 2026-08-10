@@ -1,5 +1,4 @@
 import { GoogleAuth } from 'google-auth-library';
-import fetch from 'node-fetch';
 
 /**
  * Retrieves an access token using Application Default Credentials.

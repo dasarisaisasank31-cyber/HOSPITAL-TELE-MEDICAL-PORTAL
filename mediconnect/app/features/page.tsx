@@ -1,5 +1,5 @@
 import React from "react";
-import GlassPanel from "@/components/widgets/GlassPanel";
+import GlassPanel from "../../components/widgets/GlassPanel";
 import { Shield, Activity, FileText, Video, Bot, Lock } from "lucide-react";
 
 const features = [
