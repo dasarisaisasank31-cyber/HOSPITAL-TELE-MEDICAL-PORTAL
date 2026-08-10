@@ -5,12 +5,27 @@ import { authOptions } from "@/lib/auth";
 
 export async function GET(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as any;
     if (!session || session.user.role !== "DOCTOR") {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const doctorId = session.user.id;
+    const userId = session.user.id;
+    const doctorProfile = await prisma.doctorProfile.findUnique({
+      where: { userId }
+    });
+
+    if (!doctorProfile) {
+      return NextResponse.json({
+        todaysPatients: 0,
+        pendingPrescriptions: 0,
+        monthlyEarnings: 0,
+        avgRating: 0,
+        totalReviews: 0
+      });
+    }
+
+    const doctorId = doctorProfile.id;
 
     // Get today's start and end date
     const today = new Date();
@@ -60,12 +75,6 @@ export async function GET(req: Request) {
     });
 
     const monthlyEarnings = payments.reduce((acc, curr) => acc + curr.amount, 0);
-
-    // Get average rating
-    const doctorProfile = await prisma.doctorProfile.findUnique({
-      where: { userId: doctorId },
-      select: { rating: true, totalReviews: true }
-    });
 
     return NextResponse.json({
       todaysPatients: todaysAppointmentsCount,

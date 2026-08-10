@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -56,10 +56,11 @@ model DoctorProfile {
   bio             String?
   avatar          String?
   languages       String?
-  availableSlots  String?  // JSON stringified for SQLite
+  availableSlots  Json?
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   reviews Review[]
+  appointments Appointment[]
 }
 
 model Appointment {
@@ -75,6 +76,7 @@ model Appointment {
   notes         String?
 
   patient User @relation(fields: [patientId], references: [id])
+  doctor  DoctorProfile @relation(fields: [doctorId], references: [id])
   payment Payment?
   review  Review?
   consultation Consultation?
@@ -99,7 +101,7 @@ model Prescription {
   consultationId String   @unique
   patientId      String
   doctorId       String
-  medications    String?  // JSON stringified for SQLite
+  medications    Json?
   instructions   String?
   pdfUrl         String?
   issuedAt       DateTime @default(now())
@@ -111,7 +113,7 @@ model LabOrder {
   consultationId String
   patientId      String
   doctorId       String
-  tests          String?
+  tests          Json?
   status         String   @default("PENDING")
   resultUrl      String?
   orderedAt      DateTime @default(now())
@@ -152,7 +154,7 @@ model Notification {
   body      String
   type      String
   isRead    Boolean  @default(false)
-  data      String?  // JSON stringified for SQLite
+  data      Json?
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

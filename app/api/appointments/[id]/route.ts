@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as any;
     if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     const id = params.id;
@@ -26,7 +26,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         },
         doctor: {
           include: {
-            doctorProfile: true
+            user: true
           }
         }
       }

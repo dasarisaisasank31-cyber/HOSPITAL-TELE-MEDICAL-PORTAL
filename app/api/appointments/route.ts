@@ -6,7 +6,7 @@ import { sendEmail } from "@/lib/resend";
 
 export async function GET(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as any;
     if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     const role = session.user.role;
@@ -19,23 +19,57 @@ export async function GET(req: Request) {
         include: { doctor: { select: { fullName: true, specialization: true } } },
         orderBy: { scheduledAt: 'desc' }
       });
+      return NextResponse.json(appointments);
     } else if (role === "DOCTOR") {
+      const doctorProfile = await prisma.doctorProfile.findUnique({
+        where: { userId }
+      });
+      if (!doctorProfile) return NextResponse.json([]);
+
       appointments = await prisma.appointment.findMany({
-        where: { doctorId: userId },
-        include: { patient: { select: { fullName: true } } },
+        where: { doctorId: doctorProfile.id },
+        include: { 
+          patient: { 
+            include: { 
+              patientProfile: true 
+            } 
+          } 
+        },
         orderBy: { scheduledAt: 'asc' }
       });
+
+      const mapped = appointments.map((appt: any) => ({
+        ...appt,
+        patient: appt.patient ? {
+          id: appt.patient.id,
+          email: appt.patient.email,
+          fullName: appt.patient.patientProfile?.fullName || appt.patient.email
+        } : null
+      }));
+      return NextResponse.json(mapped);
     } else {
       appointments = await prisma.appointment.findMany({
         include: { 
-          patient: { select: { fullName: true } },
+          patient: { 
+            include: { 
+              patientProfile: true 
+            } 
+          },
           doctor: { select: { fullName: true } } 
         },
         orderBy: { scheduledAt: 'desc' }
       });
-    }
 
-    return NextResponse.json(appointments);
+      const mapped = appointments.map((appt: any) => ({
+        ...appt,
+        patient: appt.patient ? {
+          id: appt.patient.id,
+          email: appt.patient.email,
+          fullName: appt.patient.patientProfile?.fullName || appt.patient.email
+        } : null
+      }));
+      return NextResponse.json(mapped);
+    }
   } catch (error: any) {
     console.error("GET Appointments Error:", error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
@@ -44,7 +78,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as any;
     if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     const { doctorId, scheduledAt, symptoms, amount } = await req.json();
@@ -67,7 +101,7 @@ export async function POST(req: Request) {
       include: {
         doctor: {
           include: {
-            user: { select: { email: true, name: true } }
+            user: { select: { email: true } }
           }
         }
       }

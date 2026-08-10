@@ -31,7 +31,7 @@ export default function DoctorDashboard() {
 
   const stats = [
     { title: "Today's Patients", value: statsData?.todaysPatients?.toString() || "0", icon: Users, trend: "Scheduled for today", trendDirection: "neutral" as const, delay: 100 },
-    { title: "Pending Prescriptions", value: statsData?.pendingPrescriptions?.toString() || "0", icon: FileText, trend: "Requires action", trendDirection: statsData?.pendingPrescriptions > 0 ? "down" : "neutral" as const, delay: 200 },
+    { title: "Pending Prescriptions", value: statsData?.pendingPrescriptions?.toString() || "0", icon: FileText, trend: "Requires action", trendDirection: (statsData?.pendingPrescriptions > 0 ? "down" : "neutral") as "up" | "down" | "neutral", delay: 200 },
     { title: "Monthly Earnings", value: `₹${statsData?.monthlyEarnings?.toLocaleString() || "0"}`, icon: IndianRupee, trend: "This month", trendDirection: "up" as const, delay: 300 },
     { title: "Avg. Rating", value: statsData?.avgRating?.toString() || "0.0", icon: Star, trend: `${statsData?.totalReviews || 0} reviews`, trendDirection: "neutral" as const, delay: 400 },
   ];
@@ -45,7 +45,7 @@ export default function DoctorDashboard() {
     patientName: a.patient?.fullName || "Patient",
     time: new Date(a.scheduledAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
     status: a.status,
-    type: "Video"
+    type: "Video" as const
   }));
 
   return (

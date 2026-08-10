@@ -1,35 +1,9 @@
 import React from 'react';
 import { AnimatedButton } from '@/components/widgets/AnimatedButton';
 import { GlassPanel } from '@/components/widgets/GlassPanel';
+import { ThreeDCard } from '@/components/widgets/ThreeDCard';
+import Navbar from '@/components/layout/Navbar';
 import { Video, Bot, FileText, ArrowRight, Activity, Shield, Clock, HeartPulse, Sparkles } from 'lucide-react';
-
-const Navbar = () => (
-  <nav className="fixed top-0 w-full z-50 bg-black/50 backdrop-blur-2xl border-b border-white/5">
-    <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.4)]">
-          <Activity className="text-white w-6 h-6" />
-        </div>
-        <span className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-cyan-300 tracking-tight">
-          MediConnect
-        </span>
-      </div>
-      <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-        <a href="#features" className="hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all">Features</a>
-        <a href="/doctors" className="hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all">Find Doctors</a>
-        <a href="#how-it-works" className="hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all">How it Works</a>
-        <div className="flex items-center gap-4 ml-4">
-          <a href="/login" className="px-4 py-2 text-gray-300 hover:text-white transition-colors font-semibold">Sign In</a>
-          <a href="/register">
-            <button className="relative px-6 py-2.5 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform duration-300 shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-              Get Started
-            </button>
-          </a>
-        </div>
-      </div>
-    </div>
-  </nav>
-);
 
 const Hero = () => (
   <section className="relative pt-40 pb-32 px-4 overflow-hidden bg-[#030712] min-h-screen flex items-center">
@@ -69,33 +43,35 @@ const Hero = () => (
       </div>
       
       {/* Stats Glass Panel */}
-      <div className="animate-slide-up stagger-4 max-w-5xl mx-auto rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/10">
+      <ThreeDCard className="max-w-5xl mx-auto rounded-3xl animate-slide-up stagger-4" maxRotation={5} scale={1.01}>
+        <div className="rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden divide-x divide-y md:divide-y-0 divide-white/10 grid grid-cols-2 md:grid-cols-4 preserve-3d">
           {[
             { value: "500+", label: "Verified Experts" },
             { value: "50k+", label: "Happy Patients" },
             { value: "4.9★", label: "Average Rating" },
             { value: "24/7", label: "Instant Access" }
           ].map((stat, i) => (
-            <div key={i} className="p-8 group hover:bg-white/5 transition-colors duration-500 cursor-default">
-              <div className="text-4xl md:text-5xl font-black text-white mb-2 group-hover:scale-110 transition-transform duration-500">{stat.value}</div>
-              <div className="text-xs font-bold text-gray-500 uppercase tracking-widest group-hover:text-cyan-400 transition-colors duration-500">{stat.label}</div>
+            <div key={i} className="p-8 group hover:bg-white/5 transition-colors duration-500 cursor-default preserve-3d">
+              <div className="text-4xl md:text-5xl font-black text-white mb-2 group-hover:scale-110 transition-transform duration-500 translate-z-20">{stat.value}</div>
+              <div className="text-xs font-bold text-gray-500 uppercase tracking-widest group-hover:text-cyan-400 transition-colors duration-500 translate-z-10">{stat.label}</div>
             </div>
           ))}
         </div>
-      </div>
+      </ThreeDCard>
     </div>
   </section>
 );
 
 const Feature = ({ icon: Icon, title, desc, delay, color }: any) => (
-  <div className={`p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 backdrop-blur-xl transition-all duration-500 group relative overflow-hidden`} style={{ animationDelay: `${delay}ms` }}>
-    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all duration-500 shadow-[0_0_15px_rgba(34,211,238,0.1)] group-hover:shadow-[0_0_25px_rgba(34,211,238,0.3)]">
-      <Icon className="w-7 h-7 drop-shadow-[0_0_10px_currentColor]" />
+  <ThreeDCard className="rounded-3xl" maxRotation={12}>
+    <div className={`p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 backdrop-blur-xl transition-all duration-500 group relative overflow-hidden preserve-3d h-full`} style={{ animationDelay: `${delay}ms` }}>
+      <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all duration-500 shadow-[0_0_15px_rgba(34,211,238,0.1)] group-hover:shadow-[0_0_25px_rgba(34,211,238,0.3)] translate-z-30">
+        <Icon className="w-7 h-7 drop-shadow-[0_0_10px_currentColor]" />
+      </div>
+      <h3 className="text-2xl font-bold text-white mb-4 tracking-tight relative z-10 translate-z-20">{title}</h3>
+      <p className="text-gray-400 leading-relaxed relative z-10 translate-z-10">{desc}</p>
     </div>
-    <h3 className="text-2xl font-bold text-white mb-4 tracking-tight relative z-10">{title}</h3>
-    <p className="text-gray-400 leading-relaxed relative z-10">{desc}</p>
-  </div>
+  </ThreeDCard>
 );
 
 const LandingPage = () => {
@@ -153,16 +129,20 @@ const LandingPage = () => {
             </a>
           </div>
           <div className="md:w-1/2 grid grid-cols-2 gap-4 w-full">
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 backdrop-blur-xl transition-all hover:border-white/20">
-              <Shield className="w-10 h-10 text-cyan-400 mb-4 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]" />
-              <h4 className="font-bold text-lg text-white mb-2">End-to-End Encrypted</h4>
-              <p className="text-sm text-gray-400">Your health data is locked securely.</p>
-            </div>
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 backdrop-blur-xl mt-8 transition-all hover:border-white/20">
-              <Clock className="w-10 h-10 text-purple-400 mb-4 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
-              <h4 className="font-bold text-lg text-white mb-2">Zero Wait Times</h4>
-              <p className="text-sm text-gray-400">Connect instantly, whenever needed.</p>
-            </div>
+            <ThreeDCard className="rounded-2xl" maxRotation={15}>
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 backdrop-blur-xl transition-all hover:border-white/20 h-full preserve-3d">
+                <Shield className="w-10 h-10 text-cyan-400 mb-4 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] translate-z-30" />
+                <h4 className="font-bold text-lg text-white mb-2 translate-z-20">End-to-End Encrypted</h4>
+                <p className="text-sm text-gray-400 translate-z-10">Your health data is locked securely.</p>
+              </div>
+            </ThreeDCard>
+            <ThreeDCard className="rounded-2xl mt-8" maxRotation={15}>
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 backdrop-blur-xl transition-all hover:border-white/20 h-full preserve-3d">
+                <Clock className="w-10 h-10 text-purple-400 mb-4 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)] translate-z-30" />
+                <h4 className="font-bold text-lg text-white mb-2 translate-z-20">Zero Wait Times</h4>
+                <p className="text-sm text-gray-400 translate-z-10">Connect instantly, whenever needed.</p>
+              </div>
+            </ThreeDCard>
           </div>
         </div>
       </section>

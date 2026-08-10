@@ -35,13 +35,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: deps
+      target: builder
     container_name: mediconnect-migrate
     command: sh -c "npx prisma db push"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/mediconnect?schema=public
-    volumes:
-      - ./prisma:/app/prisma
     depends_on:
       db:
         condition: service_healthy
