@@ -6,17 +6,19 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*";
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: ALLOWED_ORIGIN,
     methods: ["GET", "POST"]
   }
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: ALLOWED_ORIGIN }));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
