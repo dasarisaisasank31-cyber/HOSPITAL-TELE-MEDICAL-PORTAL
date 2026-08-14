@@ -91,7 +91,9 @@ function fallbackMedicalTriageEngine(
   availableSpecializations: string[] = [],
   availableDoctors: DoctorInfo[] = []
 ) {
-  const userMessages = messages.filter(m => m.role === 'user').map(m => m.content.toLowerCase());
+  const userMessages = (messages || [])
+    .filter(m => m && m.role === 'user' && typeof m.content === 'string')
+    .map(m => m.content.toLowerCase());
   const combinedUserText = userMessages.join(" ");
 
   // Check for emergency conditions

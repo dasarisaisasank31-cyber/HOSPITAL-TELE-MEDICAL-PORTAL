@@ -41,8 +41,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     ],
     ADMIN: [
       { name: 'Overview', icon: <LayoutDashboard size={20} />, path: '/dashboard/admin' },
-      { name: 'Manage Users', icon: <Users size={20} />, path: '/dashboard/admin/users' },
-      { name: 'Verify Doctors', icon: <Activity size={20} />, path: '/dashboard/admin/doctors' },
+      { name: 'Doctor Approvals', icon: <Activity size={20} />, path: '/dashboard/admin' },
     ],
     PHARMACIST: [
       { name: 'Incoming Orders', icon: <FileText size={20} />, path: '/dashboard/pharmacist' },
