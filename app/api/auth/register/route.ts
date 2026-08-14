@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    const { email, password, name, role } = await req.json();
+    const { email, password, name, role, specialization, licenseNumber, qualifications, experience, consultationFee } = await req.json();
 
     if (!email || !password || !name) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
@@ -35,17 +35,24 @@ export async function POST(req: Request) {
         doctorProfile: role === "DOCTOR" ? {
           create: {
             fullName: name,
-            specialization: "General Physician", // Placeholder
-            licenseNumber: "TEMP-" + Date.now(),
-            experience: 0,
-            qualifications: "MBBS",
-            consultationFee: 500,
+            specialization: specialization || "General Physician",
+            licenseNumber: licenseNumber || ("MCI-" + Math.floor(100000 + Math.random() * 900000)),
+            experience: Number(experience) || 1,
+            qualifications: qualifications || "MBBS",
+            consultationFee: Number(consultationFee) || 500,
+            isApproved: false,
           }
         } : undefined,
       },
     });
 
-    return NextResponse.json({ message: "User registered successfully", user: { id: user.id, email: user.email } }, { status: 201 });
+    const isDoctor = role === "DOCTOR";
+    return NextResponse.json({ 
+      message: isDoctor 
+        ? "Doctor account created successfully. Approval is pending admin review." 
+        : "User registered successfully", 
+      user: { id: user.id, email: user.email, role: user.role } 
+    }, { status: 201 });
   } catch (error: any) {
     console.error("Registration Error:", error);
     return NextResponse.json({ message: "Internal server error", error: error.message }, { status: 500 });

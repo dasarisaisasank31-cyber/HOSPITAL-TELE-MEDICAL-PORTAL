@@ -77,6 +77,7 @@ export async function GET(req: Request) {
     const monthlyEarnings = payments.reduce((acc, curr) => acc + curr.amount, 0);
 
     return NextResponse.json({
+      isApproved: doctorProfile?.isApproved ?? false,
       todaysPatients: todaysAppointmentsCount,
       pendingPrescriptions: pendingPrescriptionsCount,
       monthlyEarnings: monthlyEarnings,

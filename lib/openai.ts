@@ -217,8 +217,9 @@ Respond in clear markdown with sections for Summary, Urgency Level, Recommended 
       if (response.choices[0]?.message?.content) {
         return response.choices[0].message;
       }
-    } catch (error) {
-      console.warn("OpenAI API call failed or rate limited, falling back to built-in medical triage engine:", error);
+    } catch (error: any) {
+      console.error("[OpenAI API Error] Chat completion request failed:", error?.message || error, error);
+      console.info("[MediConnect Triage] Falling back to built-in medical triage engine.");
     }
   }
 

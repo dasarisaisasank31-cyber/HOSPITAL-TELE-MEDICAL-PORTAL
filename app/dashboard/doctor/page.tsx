@@ -8,6 +8,8 @@ import { AnimatedButton } from '@/components/widgets/AnimatedButton';
 import { AppointmentTimeline } from '@/components/widgets/AppointmentTimeline';
 import { Users, FileText, IndianRupee, Star, Calendar, Loader2 } from 'lucide-react';
 
+import DoctorPendingPage from './pending/page';
+
 export default function DoctorDashboard() {
   const { data: session } = useSession();
 
@@ -28,6 +30,10 @@ export default function DoctorDashboard() {
       setLoading(false);
     });
   }, []);
+
+  if (!loading && statsData && statsData.isApproved === false) {
+    return <DoctorPendingPage />;
+  }
 
   const stats = [
     { title: "Today's Patients", value: statsData?.todaysPatients?.toString() || "0", icon: Users, trend: "Scheduled for today", trendDirection: "neutral" as const, delay: 100 },
