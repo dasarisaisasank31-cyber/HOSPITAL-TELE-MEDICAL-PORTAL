@@ -3,7 +3,7 @@ import OpenAI from "openai";
 const apiKey = process.env.OPENAI_API_KEY;
 
 let openai: OpenAI | null = null;
-if (apiKey && !apiKey.startsWith("your-") && apiKey.trim().length > 10) {
+if (apiKey && apiKey.startsWith("sk-") && apiKey.trim().length > 20) {
   openai = new OpenAI({
     apiKey,
   });
@@ -81,9 +81,10 @@ const SPECIALIZATION_RULES: Record<string, { spec: string; keywords: string[]; q
 };
 
 const EMERGENCY_PATTERNS = [
-  "chest pain radiating", "severe difficulty breathing", "sudden numbness", "facial drooping",
-  "slurred speech", "loss of consciousness", "uncontrollable bleeding", "coughing blood",
-  "severe allergic reaction", "anaphylaxis", "poisoning", "crushing chest pain", "suicidal"
+  "chest pain", "difficulty breathing", "shortness of breath", "chest tightness",
+  "sudden numbness", "facial drooping", "slurred speech", "loss of consciousness",
+  "uncontrollable bleeding", "coughing blood", "severe allergic reaction",
+  "anaphylaxis", "poisoning", "crushing chest pain", "suicidal", "heart attack"
 ];
 
 function fallbackMedicalTriageEngine(

@@ -3,16 +3,16 @@ import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { StatCard } from '@/components/widgets/StatCard';
 import { GlassPanel } from '@/components/widgets/GlassPanel';
-import { 
-  Users, 
-  Video, 
-  IndianRupee, 
-  Stethoscope, 
-  CheckCircle2, 
-  XCircle, 
-  Clock, 
-  Award, 
-  Loader2, 
+import {
+  Users,
+  Video,
+  IndianRupee,
+  Stethoscope,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Award,
+  Loader2,
   UserCheck,
   ShieldCheck,
   Search
@@ -77,7 +77,7 @@ export default function AdminDashboard() {
   const filterDoctors = (docs: any[]) => {
     if (!searchTerm.trim()) return docs;
     const term = searchTerm.toLowerCase();
-    return docs.filter(d => 
+    return docs.filter(d =>
       d.fullName?.toLowerCase().includes(term) ||
       d.specialization?.toLowerCase().includes(term) ||
       d.licenseNumber?.toLowerCase().includes(term) ||
@@ -128,11 +128,10 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setActiveTab('pending')}
-                className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
-                  activeTab === 'pending'
+                className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'pending'
                     ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
-                }`}
+                  }`}
               >
                 <Clock className="w-4 h-4" /> Pending Approvals
                 {pendingDoctors.length > 0 && (
@@ -144,11 +143,10 @@ export default function AdminDashboard() {
 
               <button
                 onClick={() => setActiveTab('approved')}
-                className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
-                  activeTab === 'approved'
+                className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'approved'
                     ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.2)]'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
-                }`}
+                  }`}
               >
                 <CheckCircle2 className="w-4 h-4 text-green-400" /> Approved Doctors
                 <span className="px-2 py-0.5 text-xs bg-cyan-500/30 text-cyan-300 rounded-full font-bold">

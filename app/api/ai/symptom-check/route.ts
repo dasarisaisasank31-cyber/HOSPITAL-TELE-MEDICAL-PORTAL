@@ -4,10 +4,15 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
+    const body = await req.json();
+    let messages = body.messages;
+
+    if (!messages && body.symptoms) {
+      messages = [{ role: 'user', content: body.symptoms }];
+    }
     
-    if (!messages || !Array.isArray(messages)) {
-      return NextResponse.json({ content: "Invalid messages payload." }, { status: 400 });
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return NextResponse.json({ content: "Invalid payload. Please supply symptom messages." }, { status: 400 });
     }
 
     // Fetch doctors
