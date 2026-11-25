@@ -8,6 +8,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const [specialization, setSpecialization] = useState('General Physician');
@@ -18,6 +19,7 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     setLoading(true);
     try {
       const payload: any = { email, password, name, role };
@@ -34,14 +36,14 @@ export default function RegisterPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+      const data = await res.json();
       if (res.ok) {
         router.push(role === 'DOCTOR' ? '/login?registered=true&pending=true' : '/login?registered=true');
       } else {
-        const data = await res.json();
-        alert(data.message || 'Registration failed');
+        setError(data.message || data.error || 'Registration failed');
       }
-    } catch (err) {
-      alert('An error occurred');
+    } catch (err: any) {
+      setError(err?.message || 'An error occurred during registration. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -58,6 +60,12 @@ export default function RegisterPage() {
           <h1 className="text-3xl font-bold text-white tracking-tight">Create Account</h1>
           <p className="text-gray-400 mt-2">Join MediConnect as a {role.toLowerCase()}</p>
         </div>
+
+        {error && (
+          <div className="p-4 mb-6 bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl text-sm font-medium backdrop-blur-md">
+            {error}
+          </div>
+        )}
 
         <div className="flex p-1 bg-black/40 border border-white/10 rounded-2xl mb-8">
           <button 

@@ -57,10 +57,15 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Explicitly copy Prisma's generated client + engine binaries
-# (Next.js standalone tracing often misses these)
+# Explicitly copy Prisma schema and CLI tools for runtime schema synchronization
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma/client ./node_modules/@prisma/client
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+
+COPY --chown=nextjs:nodejs start.sh ./start.sh
+RUN sed -i 's/\r$//' ./start.sh && chmod +x ./start.sh
 
 USER nextjs
 
@@ -69,4 +74,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["./start.sh"]
