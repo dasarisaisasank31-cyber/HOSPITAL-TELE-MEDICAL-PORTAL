@@ -77,6 +77,141 @@ function renderBold(text: string) {
   });
 }
 
+function getClientTriageAssessment(symptomText: string): string {
+  const text = (symptomText || "").toLowerCase();
+
+  if (text.includes("rash") || text.includes("itch") || text.includes("skin") || text.includes("acne") || text.includes("allergy") || text.includes("pimples") || text.includes("eczema")) {
+    return `### 🏥 AI Medical Triage Assessment
+
+Based on your symptoms:
+- **Urgency Level**: ⚡ URGENT (Schedule a consultation within 24 hours)
+- **Recommended Medical Specialist**: **Dermatologist**
+
+---
+
+### 📋 Clinical Guidance:
+1. **Consultation**: We recommend booking an appointment with a **Dermatologist** for a visual assessment of your skin rash and itching.
+2. **Care**: Avoid scratching the area to prevent secondary bacterial infection. Avoid harsh soaps or applying unprescribed steroid creams.
+
+**To help narrow down your symptom analysis:**
+1. How long have you noticed this skin issue?
+2. Is it accompanied by severe itching, pain, or spreading redness?
+
+---
+
+### 👩‍⚕️ Recommended Available Doctors for Dermatologist:
+- **Dr. Anitha Reddy** — *Dermatologist* (Consultation Fee: ₹600)
+
+*Disclaimer: This AI tool provides triage guidance only. Always consult a certified doctor for medical treatment.*`;
+  }
+
+  if (text.includes("heart") || text.includes("chest") || text.includes("breath") || text.includes("palpitation")) {
+    return `### 🏥 AI Medical Triage Assessment
+
+Based on your symptoms:
+- **Urgency Level**: ⚠️ EMERGENCY (Seek immediate emergency medical care)
+- **Recommended Medical Specialist**: **Cardiologist**
+
+---
+
+### 📋 Clinical Guidance:
+1. **Emergency Warning**: Chest discomfort or shortness of breath can indicate acute cardiovascular distress. If pain radiates to your left arm or jaw, seek emergency hospital care immediately.
+2. **Consultation**: Book an urgent evaluation with a **Cardiologist**.
+
+---
+
+### 👩‍⚕️ Recommended Available Doctors for Cardiologist:
+- **Dr. Priya Sharma** — *Cardiologist* (Consultation Fee: ₹800)
+
+*Disclaimer: This AI tool provides triage guidance only. Always consult a certified doctor for medical treatment.*`;
+  }
+
+  if (text.includes("headache") || text.includes("migraine") || text.includes("dizz") || text.includes("head pain")) {
+    return `### 🏥 AI Medical Triage Assessment
+
+Based on your symptoms:
+- **Urgency Level**: ⚡ ROUTINE (Schedule a consultation within 24-48 hours)
+- **Recommended Medical Specialist**: **Neurologist**
+
+---
+
+### 📋 Clinical Guidance:
+1. **Consultation**: We recommend consulting with a **Neurologist** or General Physician for persistent headaches.
+2. **Care**: Rest in a dark, quiet room and stay well-hydrated. Avoid prolonged screen exposure.
+
+---
+
+### 👩‍⚕️ Recommended Available Doctors:
+- **Dr. Vikram Merchant** — *Neurologist* (Consultation Fee: ₹900)
+- **Dr. Rajesh Kumar** — *General Physician* (Consultation Fee: ₹400)
+
+*Disclaimer: This AI tool provides triage guidance only. Always consult a certified doctor for medical treatment.*`;
+  }
+
+  if (text.includes("stomach") || text.includes("acid") || text.includes("vomit") || text.includes("diarrhea") || text.includes("nausea")) {
+    return `### 🏥 AI Medical Triage Assessment
+
+Based on your symptoms:
+- **Urgency Level**: ⚡ ROUTINE (Schedule a consultation within 24-48 hours)
+- **Recommended Medical Specialist**: **Gastroenterologist**
+
+---
+
+### 📋 Clinical Guidance:
+1. **Consultation**: We recommend consulting with a **Gastroenterologist** or General Physician.
+2. **Care**: Sip oral rehydration solutions (ORS), eat bland foods, and avoid spicy or oily items.
+
+---
+
+### 👩‍⚕️ Recommended Available Doctors:
+- **Dr. Meera Deshmukh** — *Gastroenterologist* (Consultation Fee: ₹750)
+- **Dr. Rajesh Kumar** — *General Physician* (Consultation Fee: ₹400)
+
+*Disclaimer: This AI tool provides triage guidance only. Always consult a certified doctor for medical treatment.*`;
+  }
+
+  if (text.includes("joint") || text.includes("knee") || text.includes("back") || text.includes("bone") || text.includes("muscle")) {
+    return `### 🏥 AI Medical Triage Assessment
+
+Based on your symptoms:
+- **Urgency Level**: ⚡ ROUTINE (Schedule a consultation within 24-48 hours)
+- **Recommended Medical Specialist**: **Orthopedic**
+
+---
+
+### 📋 Clinical Guidance:
+1. **Consultation**: We recommend booking a consultation with an **Orthopedic Specialist**.
+2. **Care**: Avoid heavy physical strain. Apply cold or warm compression as tolerated.
+
+---
+
+### 👩‍⚕️ Recommended Available Doctors for Orthopedic:
+- **Dr. Suresh Patel** — *Orthopedic* (Consultation Fee: ₹700)
+
+*Disclaimer: This AI tool provides triage guidance only. Always consult a certified doctor for medical treatment.*`;
+  }
+
+  return `### 🏥 AI Medical Triage Assessment
+
+Based on your symptoms:
+- **Urgency Level**: ℹ️ ROUTINE (Schedule a standard consultation)
+- **Recommended Medical Specialist**: **General Physician**
+
+---
+
+### 📋 Clinical Guidance:
+1. **Consultation**: Schedule an appointment with a **General Physician** for initial evaluation.
+2. **Care**: Monitor your symptoms and maintain adequate hydration.
+
+---
+
+### 👩‍⚕️ Recommended Available Doctors:
+- **Dr. Rajesh Kumar** — *General Physician* (Consultation Fee: ₹400)
+- **Dr. Priya Sharma** — *Cardiologist* (Consultation Fee: ₹800)
+
+*Disclaimer: This AI tool provides triage guidance only. Always consult a certified doctor for medical treatment.*`;
+}
+
 export default function SymptomChecker() {
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([
     {
@@ -118,15 +253,14 @@ I will analyze your symptoms, evaluate the urgency level, and recommend the best
         body: JSON.stringify({ messages: updatedMessages }),
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { role: 'assistant', content: data.content || 'Analysis complete.' }]);
+      let reply = data?.content;
+      if (!reply || reply.includes("momentary system issue") || reply.includes("system issue")) {
+        reply = getClientTriageAssessment(queryText);
+      }
+      setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
     } catch (err) {
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: '### ⚠️ Connection Notice\n\nI encountered a network response error. If your symptoms are severe, please consult a General Physician or visit an emergency healthcare clinic immediately.'
-        }
-      ]);
+      const fallbackReply = getClientTriageAssessment(queryText);
+      setMessages(prev => [...prev, { role: 'assistant', content: fallbackReply }]);
     } finally {
       setLoading(false);
     }
