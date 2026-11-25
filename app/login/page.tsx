@@ -72,6 +72,42 @@ export default function LoginPage() {
           </button>
         </form>
 
+        {/* Quick One-Click Demo Access */}
+        <div className="mt-6 pt-6 border-t border-white/10">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3 text-center">
+            Instant Demo One-Click Access
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={async () => {
+                await signIn('credentials', { email: 'patient@mediconnect.in', password: '123', callbackUrl: '/dashboard/patient' });
+              }}
+              className="py-2.5 px-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-semibold text-cyan-300 transition-all text-center"
+            >
+              👤 Patient
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                await signIn('credentials', { email: 'doctor@mediconnect.in', password: '123', callbackUrl: '/dashboard/doctor' });
+              }}
+              className="py-2.5 px-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-semibold text-blue-300 transition-all text-center"
+            >
+              🩺 Doctor
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                await signIn('credentials', { email: 'admin@mediconnect.in', password: '123', callbackUrl: '/dashboard/admin' });
+              }}
+              className="py-2.5 px-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-semibold text-purple-300 transition-all text-center"
+            >
+              ⚡ Admin
+            </button>
+          </div>
+        </div>
+
         <div className="mt-8 text-center text-sm text-gray-400">
           Don't have an account? <a href="/register" className="text-cyan-400 font-bold hover:text-cyan-300 transition-colors drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]">Register now</a>
         </div>

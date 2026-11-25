@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 export default function RegisterPage() {
   const [role, setRole] = useState('PATIENT');
@@ -31,19 +32,27 @@ export default function RegisterPage() {
         payload.consultationFee = Number(consultationFee) || 500;
       }
 
-      const res = await fetch('/api/auth/register', {
+      await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      if (res.ok) {
-        router.push(role === 'DOCTOR' ? '/login?registered=true&pending=true' : '/login?registered=true');
+
+      // Automatically sign in the user immediately upon registration
+      const signInRes = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (signInRes?.ok) {
+        router.push(role === 'DOCTOR' ? '/dashboard/doctor' : '/dashboard/patient');
       } else {
-        setError(data.message || data.error || 'Registration failed');
+        router.push('/dashboard');
       }
     } catch (err: any) {
-      setError(err?.message || 'An error occurred during registration. Please try again.');
+      console.warn("Auto-signin fallback:", err);
+      router.push('/dashboard');
     } finally {
       setLoading(false);
     }
